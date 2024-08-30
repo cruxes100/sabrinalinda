@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flores Amarillas en Vivo</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #87CEFA; /* Fondo de color celeste */
+        }
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        .stem {
+            stroke: green;
+            stroke-width: 5;
+            fill: none;
+        }
+        .flower {
+            opacity: 0;
+            transform-origin: center;
+            animation: sway 2s ease-in-out infinite alternate;
+        }
+        .petal {
+            fill: yellow;
+        }
+        .center {
+            fill: orange;
+        }
+        .message-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        @keyframes sway {
+            0% { transform: translateX(-10px); }
+            100% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <svg id="flowerCanvas" xmlns="http://www.w3.org/2000/svg"></svg>
+
+    <div id="message" class="message-box">
+        Te envío estas flores amarillas para iluminar tu día con la misma alegría y energía que siempre transmites. 🌼✨<br/>
+        ¡Que tu vida esté llena de momentos brillantes y felices!<br/>
+        <strong>Aleshanda</strong>
+    </div>
+
+    <script>
+        const numRows = 4; // Número de filas
+        const numCols = 3; // Número de columnas
+        const spacingX = window.innerWidth / (numCols + 1);
+        const spacingY = window.innerHeight / (numRows + 1);
+
+        function createFlower(x, y, idPrefix) {
+            return `
+                <g id="${idPrefix}" class="flower">
+                    <!-- Tallo -->
+                    <line x1="${x}" y1="${y + 50}" x2="${x}" y2="${y}" class="stem" />
+                    <!-- Pétalos -->
+                    <circle cx="${x}" cy="${y}" r="20" class="petal" />
+                    <circle cx="${x - 20}" cy="${y - 20}" r="15" class="petal" />
+                    <circle cx="${x + 20}" cy="${y - 20}" r="15" class="petal" />
+                    <circle cx="${x - 20}" cy="${y + 20}" r="15" class="petal" />
+                    <circle cx="${x + 20}" cy="${y + 20}" r="15" class="petal" />
+                    <!-- Centro -->
+                    <circle cx="${x}" cy="${y}" r="10" class="center" />
+                </g>
+            `;
+        }
+
+        function createFlowers() {
+            const svgContent = [];
+            let idCounter = 1;
+
+            for (let row = 1; row <= numRows; row++) {
+                for (let col = 1; col <= numCols; col++) {
+                    const x = col * spacingX;
+                    const y = row * spacingY;
+                    svgContent.push(createFlower(x, y, `flower${idCounter}`));
+                    idCounter++;
+                }
+            }
+
+            document.getElementById('flowerCanvas').innerHTML = svgContent.join('');
+        }
+
+        function animateFlowers() {
+            const flowers = document.querySelectorAll('.flower');
+            
+            flowers.forEach((flower, index) => {
+                setTimeout(() => {
+                    flower.style.opacity = 1;
+                }, index * 200);
+            });
+
+            // Mostrar el mensaje después de que todas las flores se hayan creado
+            setTimeout(() => {
+                document.getElementById('message').style.opacity = 1;
+            }, flowers.length * 200);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createFlowers();  // Crear las flores primero
+            animateFlowers(); // Luego animarlas
+        });
+    </script>
+</body>
+</html>
